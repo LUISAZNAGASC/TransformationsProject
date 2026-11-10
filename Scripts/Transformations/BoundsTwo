@@ -1,27 +1,83 @@
 #pragma once
 
+#include <algorithm>
 #include "VectorTwo.hpp"
 
 class Bounds2D
 {
 public:
-	Bounds2D() = default;
-	Bounds2D(const VectorTwo& position, const VectorTwo& size) : m_position(position), m_size(size) {}
+    Bounds2D() = default;
 
-	const VectorTwo& GetPosition() const { return m_position; }
-	const VectorTwo& GetSize() const { return m_size; }
-	void SetPosition(const VectorTwo& position) { m_position = position; }
-	VectorTwo GetCenter() const { return m_position + m_size * 0.5; }
+    Bounds2D(const VectorTwo& center, const VectorTwo& size)
+        : m_position(center),
+          m_size(std::max(0.0, size.GetX()),
+                 std::max(0.0, size.GetY()))
+    {
+    }
 
-	bool Intersects(const Bounds2D& other) const
-	{
-		return m_position.GetX() < other.m_position.GetX() + other.m_size.GetX()
-			&& m_position.GetX() + m_size.GetX() > other.m_position.GetX()
-			&& m_position.GetY() < other.m_position.GetY() + other.m_size.GetY()
-			&& m_position.GetY() + m_size.GetY() > other.m_position.GetY();
-	}
+    const VectorTwo& GetPosition() const { return m_position; }
+    const VectorTwo& GetSize() const { return m_size; }
+
+    void SetPosition(const VectorTwo& center)
+    {
+        m_position = center;
+    }
+
+    void SetSize(const VectorTwo& size)
+    {
+        m_size = VectorTwo(
+            std::max(0.0, size.GetX()),
+            std::max(0.0, size.GetY()));
+    }
+
+    VectorTwo GetCenter() const
+    {
+        return m_position;
+    }
+
+    double Left() const
+    {
+        return m_position.GetX() - m_size.GetX() * 0.5;
+    }
+
+    double Top() const
+    {
+        return m_position.GetY() - m_size.GetY() * 0.5;
+    }
+
+    double Right() const
+    {
+        return m_position.GetX() + m_size.GetX() * 0.5;
+    }
+
+    double Bottom() const
+    {
+        return m_position.GetY() + m_size.GetY() * 0.5;
+    }
+
+    bool Contains(const VectorTwo& point) const
+    {
+        return point.GetX() >= Left() && point.GetX() <= Right()
+            && point.GetY() >= Top()  && point.GetY() <= Bottom();
+    }
+
+    VectorTwo ClosestPoint(const VectorTwo& point) const
+    {
+        return VectorTwo(
+            std::clamp(point.GetX(), Left(), Right()),
+            std::clamp(point.GetY(), Top(), Bottom()));
+    }
+
+    // Tocar justo el borde no cuenta como solapamiento.
+    bool Intersects(const Bounds2D& other) const
+    {
+        return Left() < other.Right()
+            && Right() > other.Left()
+            && Top() < other.Bottom()
+            && Bottom() > other.Top();
+    }
 
 private:
-	VectorTwo m_position;
-	VectorTwo m_size;
+    VectorTwo m_position{}; // Centro del rectángulo
+    VectorTwo m_size{};     // Ancho y alto
 };
