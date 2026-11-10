@@ -1,0 +1,27 @@
+#pragma once
+
+#include "VectorTwo.hpp"
+
+class Bounds2D
+{
+public:
+	Bounds2D() = default;
+	Bounds2D(const VectorTwo& position, const VectorTwo& size) : m_position(position), m_size(size) {}
+
+	const VectorTwo& GetPosition() const { return m_position; }
+	const VectorTwo& GetSize() const { return m_size; }
+	void SetPosition(const VectorTwo& position) { m_position = position; }
+	VectorTwo GetCenter() const { return m_position + m_size * 0.5; }
+
+	bool Intersects(const Bounds2D& other) const
+	{
+		return m_position.GetX() < other.m_position.GetX() + other.m_size.GetX()
+			&& m_position.GetX() + m_size.GetX() > other.m_position.GetX()
+			&& m_position.GetY() < other.m_position.GetY() + other.m_size.GetY()
+			&& m_position.GetY() + m_size.GetY() > other.m_position.GetY();
+	}
+
+private:
+	VectorTwo m_position;
+	VectorTwo m_size;
+};
