@@ -1,0 +1,217 @@
+#include "VectorTwo.hpp"
+
+std::ostream& operator<<(std::ostream& ostreamComponent, const VectorTwo& thisVectorTwo)
+{
+	ostreamComponent << "{ ";
+	ostreamComponent << "X: ";
+	ostreamComponent << thisVectorTwo.GetXComponent();
+	ostreamComponent << ", ";
+	ostreamComponent << "Y: ";
+	ostreamComponent << thisVectorTwo.GetYComponent();
+	ostreamComponent << " }";
+
+	return ostreamComponent;
+}
+
+VectorTwo::VectorTwo(const double xComponent, const double yComponent) noexcept : m_xComponent(xComponent), m_yComponent(yComponent)
+{
+
+}
+
+bool VectorTwo::operator==(const VectorTwo& otherVectorTwo) const noexcept
+{
+	const bool xComparison = GetXComponent() == otherVectorTwo.GetXComponent();
+	const bool yComparison = GetYComponent() == otherVectorTwo.GetYComponent();
+
+	return xComparison && yComparison;
+}
+
+bool VectorTwo::operator!=(const VectorTwo& otherVectorTwo) const noexcept
+{
+	const bool xComparison = GetXComponent() != otherVectorTwo.GetXComponent();
+	const bool yComparison = GetYComponent() != otherVectorTwo.GetYComponent();
+
+	return xComparison || yComparison;
+}
+
+VectorTwo VectorTwo::operator+(const VectorTwo& otherVectorTwo) const noexcept
+{
+	const double xComponent = GetXComponent() + otherVectorTwo.GetXComponent();
+	const double yComponent = GetYComponent() + otherVectorTwo.GetYComponent();
+
+	return VectorTwo(xComponent, yComponent);
+}
+
+VectorTwo VectorTwo::operator-(const VectorTwo& otherVectorTwo) const noexcept
+{
+	const double xComponent = GetXComponent() - otherVectorTwo.GetXComponent();
+	const double yComponent = GetYComponent() - otherVectorTwo.GetYComponent();
+
+	return VectorTwo(xComponent, yComponent);
+}
+
+VectorTwo VectorTwo::operator*(const VectorTwo& otherVectorTwo) const noexcept
+{
+	const double xComponent = GetXComponent() * otherVectorTwo.GetXComponent();
+	const double yComponent = GetYComponent() * otherVectorTwo.GetYComponent();
+
+	return VectorTwo(xComponent, yComponent);
+}
+
+VectorTwo VectorTwo::operator/(const VectorTwo& otherVectorTwo) const noexcept
+{
+	const double xComponent = GetXComponent() / otherVectorTwo.GetXComponent();
+	const double yComponent = GetYComponent() / otherVectorTwo.GetYComponent();
+
+	return VectorTwo(xComponent, yComponent);
+}
+
+VectorTwo VectorTwo::operator+(const double valueModifier) const noexcept
+{
+	const double xComponent = GetXComponent() + valueModifier;
+	const double yComponent = GetYComponent() + valueModifier;
+
+	return VectorTwo(xComponent, yComponent);
+}
+
+VectorTwo VectorTwo::operator-(const double valueModifier) const noexcept
+{
+	const double xComponent = GetXComponent() - valueModifier;
+	const double yComponent = GetYComponent() - valueModifier;
+
+	return VectorTwo(xComponent, yComponent);
+}
+
+VectorTwo VectorTwo::operator*(const double valueModifier) const noexcept
+{
+	const double xComponent = GetXComponent() * valueModifier;
+	const double yComponent = GetYComponent() * valueModifier;
+
+	return VectorTwo(xComponent, yComponent);
+}
+
+VectorTwo VectorTwo::operator/(const double valueModifier) const noexcept
+{
+	const double xComponent = GetXComponent() / valueModifier;
+	const double yComponent = GetYComponent() / valueModifier;
+
+	return VectorTwo(xComponent, yComponent);
+}
+
+VectorTwo& VectorTwo::operator+=(const VectorTwo& otherVectorTwo) noexcept
+{
+	m_xComponent = GetXComponent() + otherVectorTwo.GetXComponent();
+	m_yComponent = GetYComponent() + otherVectorTwo.GetYComponent();
+
+	return *this;
+}
+
+VectorTwo& VectorTwo::operator-=(const VectorTwo& otherVectorTwo) noexcept
+{
+	m_xComponent = GetXComponent() - otherVectorTwo.GetXComponent();
+	m_yComponent = GetYComponent() - otherVectorTwo.GetYComponent();
+
+	return *this;
+}
+
+VectorTwo& VectorTwo::operator*=(const VectorTwo& otherVectorTwo) noexcept
+{
+	m_xComponent = GetXComponent() * otherVectorTwo.GetXComponent();
+	m_yComponent = GetYComponent() * otherVectorTwo.GetYComponent();
+
+	return *this;
+}
+
+VectorTwo& VectorTwo::operator/=(const VectorTwo& otherVectorTwo) noexcept
+{
+	m_xComponent = GetXComponent() / otherVectorTwo.GetXComponent();
+	m_yComponent = GetYComponent() / otherVectorTwo.GetYComponent();
+
+	return *this;
+}
+
+VectorTwo& VectorTwo::operator+=(const double valueModifier) noexcept
+{
+	m_xComponent = GetXComponent() + valueModifier;
+	m_yComponent = GetYComponent() + valueModifier;
+
+	return *this;
+}
+
+VectorTwo& VectorTwo::operator-=(const double valueModifier) noexcept
+{
+	m_xComponent = GetXComponent() - valueModifier;
+	m_yComponent = GetYComponent() - valueModifier;
+
+	return *this;
+}
+
+VectorTwo& VectorTwo::operator*=(const double valueModifier) noexcept
+{
+	m_xComponent = GetXComponent() * valueModifier;
+	m_yComponent = GetYComponent() * valueModifier;
+
+	return *this;
+}
+
+VectorTwo& VectorTwo::operator/=(const double valueModifier) noexcept
+{
+	m_xComponent = GetXComponent() / valueModifier;
+	m_yComponent = GetYComponent() / valueModifier;
+
+	return *this;
+}
+
+double VectorTwo::GetXComponent() const noexcept
+{
+	return m_xComponent;
+}
+
+double VectorTwo::GetYComponent() const noexcept
+{
+	return m_yComponent;
+}
+
+=======
+
+#pragma once
+
+#include <iostream>
+
+struct VectorTwo final
+{
+private:
+	double m_xComponent = 0.0;
+	double m_yComponent = 0.0;
+
+	friend std::ostream& operator<<(std::ostream& ostreamComponent, const VectorTwo& thisVectorTwo);
+
+public:
+	VectorTwo(const double xComponent, const double yComponent) noexcept;
+
+	bool operator==(const VectorTwo& otherVector) const noexcept;
+	bool operator!=(const VectorTwo& otherVector) const noexcept;
+	
+	VectorTwo operator+(const VectorTwo& otherVectorTwo) const noexcept;
+	VectorTwo operator-(const VectorTwo& otherVectorTwo) const noexcept;
+	VectorTwo operator*(const VectorTwo& otherVectorTwo) const noexcept;
+	VectorTwo operator/(const VectorTwo& otherVectorTwo) const noexcept;
+
+	VectorTwo operator+(const double valueModifier) const noexcept;
+	VectorTwo operator-(const double valueModifier) const noexcept;
+	VectorTwo operator*(const double valueModifier) const noexcept;
+	VectorTwo operator/(const double valueModifier) const noexcept;
+
+	VectorTwo& operator+=(const VectorTwo& otherVectorTwo) noexcept;
+	VectorTwo& operator-=(const VectorTwo& otherVectorTwo) noexcept;
+	VectorTwo& operator*=(const VectorTwo& otherVectorTwo) noexcept;
+	VectorTwo& operator/=(const VectorTwo& otherVectorTwo) noexcept;
+
+	VectorTwo& operator+=(const double valueModifier) noexcept;
+	VectorTwo& operator-=(const double valueModifier) noexcept;
+	VectorTwo& operator*=(const double valueModifier) noexcept;
+	VectorTwo& operator/=(const double valueModifier) noexcept;
+
+	double GetXComponent() const noexcept;
+	double GetYComponent() const noexcept;
+};
