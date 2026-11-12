@@ -1,3 +1,57 @@
+#pragma once
+
+#include <iostream>
+
+struct VectorTwo final
+{
+private:
+	double m_xComponent = 0.0;
+	double m_yComponent = 0.0;
+
+	friend std::ostream& operator<<(std::ostream& ostreamComponent, const VectorTwo& thisVectorTwo);
+
+public:
+	VectorTwo(const double xComponent, const double yComponent) noexcept;
+
+	bool operator==(const VectorTwo& otherVector) const noexcept;
+	bool operator!=(const VectorTwo& otherVector) const noexcept;
+
+	VectorTwo operator+(const VectorTwo& otherVectorTwo) const noexcept;
+	VectorTwo operator-(const VectorTwo& otherVectorTwo) const noexcept;
+	VectorTwo operator*(const VectorTwo& otherVectorTwo) const noexcept;
+	VectorTwo operator/(const VectorTwo& otherVectorTwo) const noexcept;
+
+	VectorTwo operator+(const double valueModifier) const noexcept;
+	VectorTwo operator-(const double valueModifier) const noexcept;
+	VectorTwo operator*(const double valueModifier) const noexcept;
+	VectorTwo operator/(const double valueModifier) const noexcept;
+
+	VectorTwo& operator+=(const VectorTwo& otherVectorTwo) noexcept;
+	VectorTwo& operator-=(const VectorTwo& otherVectorTwo) noexcept;
+	VectorTwo& operator*=(const VectorTwo& otherVectorTwo) noexcept;
+	VectorTwo& operator/=(const VectorTwo& otherVectorTwo) noexcept;
+
+	VectorTwo& operator+=(const double valueModifier) noexcept;
+	VectorTwo& operator-=(const double valueModifier) noexcept;
+	VectorTwo& operator*=(const double valueModifier) noexcept;
+	VectorTwo& operator/=(const double valueModifier) noexcept;
+
+	double GetXComponent() const noexcept;
+	double GetYComponent() const noexcept;
+
+	static double GetRealDistance(const VectorTwo& firstVectorTwo, const VectorTwo& secondVectorTwo) noexcept;
+	static double GetSquaredDistance(const VectorTwo& firstVectorTwo, const VectorTwo& secondVectorTwo) noexcept;
+
+	static double GetRealMagnitude(const VectorTwo& firstVectorTwo) noexcept;
+	static double GetSquaredMagnitude(const VectorTwo& firstVectorTwo) noexcept;
+	static VectorTwo GetClampedMagnitude(const VectorTwo& firstVectorTwo, const double maximumLength) noexcept;
+	static VectorTwo GetNormalizedVector(const VectorTwo& firstVectorTwo) noexcept;
+
+	static double GetDotProduct(const VectorTwo& firstVectorTwo, const VectorTwo& secondVectorTwo) noexcept;
+};
+
+
+
 #include "VectorTwo.hpp"
 
 std::ostream& operator<<(std::ostream& ostreamComponent, const VectorTwo& thisVectorTwo)
@@ -172,46 +226,90 @@ double VectorTwo::GetYComponent() const noexcept
 	return m_yComponent;
 }
 
-=======
-
-#pragma once
-
-#include <iostream>
-
-struct VectorTwo final
+double VectorTwo::GetRealDistance(const VectorTwo& firstVectorTwo, const VectorTwo& secondVectorTwo) noexcept
 {
-private:
-	double m_xComponent = 0.0;
-	double m_yComponent = 0.0;
+	const double xDifference = firstVectorTwo.GetXComponent() - secondVectorTwo.GetXComponent();
+	const double yDifference = firstVectorTwo.GetYComponent() - secondVectorTwo.GetYComponent();
 
-	friend std::ostream& operator<<(std::ostream& ostreamComponent, const VectorTwo& thisVectorTwo);
+	return std::sqrt(xDifference * xDifference + yDifference * yDifference);
+}
 
-public:
-	VectorTwo(const double xComponent, const double yComponent) noexcept;
+double VectorTwo::GetSquaredDistance(const VectorTwo& firstVectorTwo, const VectorTwo& secondVectorTwo) noexcept
+{
+	const double xDifference = firstVectorTwo.GetXComponent() - secondVectorTwo.GetXComponent();
+	const double yDifference = firstVectorTwo.GetYComponent() - secondVectorTwo.GetYComponent();
 
-	bool operator==(const VectorTwo& otherVector) const noexcept;
-	bool operator!=(const VectorTwo& otherVector) const noexcept;
-	
-	VectorTwo operator+(const VectorTwo& otherVectorTwo) const noexcept;
-	VectorTwo operator-(const VectorTwo& otherVectorTwo) const noexcept;
-	VectorTwo operator*(const VectorTwo& otherVectorTwo) const noexcept;
-	VectorTwo operator/(const VectorTwo& otherVectorTwo) const noexcept;
+	return xDifference * xDifference + yDifference * yDifference;
+}
 
-	VectorTwo operator+(const double valueModifier) const noexcept;
-	VectorTwo operator-(const double valueModifier) const noexcept;
-	VectorTwo operator*(const double valueModifier) const noexcept;
-	VectorTwo operator/(const double valueModifier) const noexcept;
+double VectorTwo::GetRealMagnitude(const VectorTwo& firstVectorTwo) noexcept
+{
+	const double xSquared = firstVectorTwo.GetXComponent() * firstVectorTwo.GetXComponent();
+	const double ySquared = firstVectorTwo.GetYComponent() * firstVectorTwo.GetYComponent();
 
-	VectorTwo& operator+=(const VectorTwo& otherVectorTwo) noexcept;
-	VectorTwo& operator-=(const VectorTwo& otherVectorTwo) noexcept;
-	VectorTwo& operator*=(const VectorTwo& otherVectorTwo) noexcept;
-	VectorTwo& operator/=(const VectorTwo& otherVectorTwo) noexcept;
+	return std::sqrt(xSquared + ySquared);
+}
 
-	VectorTwo& operator+=(const double valueModifier) noexcept;
-	VectorTwo& operator-=(const double valueModifier) noexcept;
-	VectorTwo& operator*=(const double valueModifier) noexcept;
-	VectorTwo& operator/=(const double valueModifier) noexcept;
+double VectorTwo::GetSquaredMagnitude(const VectorTwo& firstVectorTwo) noexcept
+{
+	const double xSquared = firstVectorTwo.GetXComponent() * firstVectorTwo.GetXComponent();
+	const double ySquared = firstVectorTwo.GetYComponent() * firstVectorTwo.GetYComponent();
 
-	double GetXComponent() const noexcept;
-	double GetYComponent() const noexcept;
-};
+	return xSquared + ySquared;
+}
+
+VectorTwo VectorTwo::GetClampedMagnitude(const VectorTwo& firstVectorTwo, const double maximumLength) noexcept
+{
+	const double squaredMagnitude = GetSquaredMagnitude(firstVectorTwo);
+
+	double xComponent;
+	double yComponent;
+
+	if (squaredMagnitude > maximumLength * maximumLength)
+	{
+		const double realMagnitude = GetRealMagnitude(firstVectorTwo);
+
+		const double xNormalized = firstVectorTwo.GetXComponent() / realMagnitude;
+		const double yNormalized = firstVectorTwo.GetYComponent() / realMagnitude;
+
+		xComponent = xNormalized * maximumLength;
+		yComponent = yNormalized * maximumLength;
+	}
+	else
+	{
+		xComponent = firstVectorTwo.GetXComponent();
+		yComponent = firstVectorTwo.GetYComponent();
+	}
+
+	return VectorTwo(xComponent, yComponent);
+}
+
+VectorTwo VectorTwo::GetNormalizedVector(const VectorTwo& firstVectorTwo) noexcept
+{
+	const float realMagnitude = GetRealMagnitude(firstVectorTwo);
+
+	double xComponent;
+	double yComponent;
+
+	if (realMagnitude > 0.0)
+	{
+		xComponent = firstVectorTwo.GetXComponent() / realMagnitude;
+		yComponent = firstVectorTwo.GetYComponent() / realMagnitude;
+	}
+	else
+	{
+		xComponent = 0.0;
+		yComponent = 0.0;
+	}
+
+	return VectorTwo(xComponent, yComponent);
+}
+
+double VectorTwo::GetDotProduct(const VectorTwo& firstVectorTwo, const VectorTwo& secondVectorTwo) noexcept
+{
+	const double xProduct = firstVectorTwo.GetXComponent() * secondVectorTwo.GetXComponent();
+	const double yProduct = firstVectorTwo.GetYComponent() * secondVectorTwo.GetYComponent();
+
+	return xProduct + yProduct;
+}
+
