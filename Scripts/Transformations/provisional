@@ -44,12 +44,13 @@ public:
 
 	static double GetRealMagnitude(const VectorTwo& firstVectorTwo) noexcept;
 	static double GetSquaredMagnitude(const VectorTwo& firstVectorTwo) noexcept;
-	static VectorTwo GetClampedMagnitude(const VectorTwo& firstVectorTwo, const double maximumLength) noexcept;
+
+	static VectorTwo GetRestrictedVector(const VectorTwo& firstVectorTwo, const double maximumLength) noexcept;
 	static VectorTwo GetNormalizedVector(const VectorTwo& firstVectorTwo) noexcept;
 
 	static double GetDotProduct(const VectorTwo& firstVectorTwo, const VectorTwo& secondVectorTwo) noexcept;
+	static double GetCrossProduct(const VectorTwo& firstVectorTwo, const VectorTwo& secondVectorTwo) noexcept;
 };
-
 
 
 #include "VectorTwo.hpp"
@@ -258,7 +259,7 @@ double VectorTwo::GetSquaredMagnitude(const VectorTwo& firstVectorTwo) noexcept
 	return xSquared + ySquared;
 }
 
-VectorTwo VectorTwo::GetClampedMagnitude(const VectorTwo& firstVectorTwo, const double maximumLength) noexcept
+VectorTwo VectorTwo::GetRestrictedVector(const VectorTwo& firstVectorTwo, const double maximumLength) noexcept
 {
 	const double squaredMagnitude = GetSquaredMagnitude(firstVectorTwo);
 
@@ -307,9 +308,16 @@ VectorTwo VectorTwo::GetNormalizedVector(const VectorTwo& firstVectorTwo) noexce
 
 double VectorTwo::GetDotProduct(const VectorTwo& firstVectorTwo, const VectorTwo& secondVectorTwo) noexcept
 {
-	const double xProduct = firstVectorTwo.GetXComponent() * secondVectorTwo.GetXComponent();
-	const double yProduct = firstVectorTwo.GetYComponent() * secondVectorTwo.GetYComponent();
+	const double firstProduct = firstVectorTwo.GetXComponent() * secondVectorTwo.GetXComponent();
+	const double secondProduct = firstVectorTwo.GetYComponent() * secondVectorTwo.GetYComponent();
 
-	return xProduct + yProduct;
+	return firstProduct + secondProduct;
 }
 
+double VectorTwo::GetCrossProduct(const VectorTwo& firstVectorTwo, const VectorTwo& secondVectorTwo) noexcept
+{
+	const double firstProduct = firstVectorTwo.GetXComponent() * secondVectorTwo.GetYComponent();
+	const double secondProduct = firstVectorTwo.GetYComponent() * secondVectorTwo.GetXComponent();
+
+	return firstProduct - secondProduct;
+}
